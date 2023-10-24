@@ -21,6 +21,11 @@ class DatabaseManager:
         destinations_collection = self.db["destinations"]
         destinations_collection.create_index("code", unique=True)
         destinations_collection.create_index("city", unique=True)
+
+        # Crie um índice para o atributo 'reservation_id' na coleção de reservas
+        reservation_collection = self.db["reservations"]
+        reservation_collection.create_index("reservation_id", unique=True)
+
         
     def get_collection(self, collection_name):
         return self.db[collection_name]
@@ -165,3 +170,36 @@ class DatabaseManager:
         #    return date_system_data["current_datetime"]
         #else:
         #    return datetime.now()
+
+    # Reservation
+
+    def save_reservation(self, reservation_data):
+        try:
+            reservations_collection = self.db["reservations"]
+            reservations_collection.insert_one(reservation_data)
+            print(f"Reserva salva no banco: {reservation_data}")
+        except Exception as e:
+            print(f"Erro ao salvar a reserva no banco: {e}")
+            return e
+        
+    def edit_reservation(self, reservation_id, updated_reservation_data):
+        try:
+            reservations_collection = self.db["reservations"]
+            query = {"reservation_id": reservation_id}
+            reservations_collection.update_one(query, {"$set": updated_reservation_data})
+            print(f"Reserva atualizada no banco: {reservation_id}")
+        except Exception as e:
+            print(f"Erro ao atualizar a reserva no banco: {e}")
+            return e
+        
+    def delete_reservation(self, reservation_id):
+        try:
+            reservations_collection = self.db["reservations"]
+            query = {"reservation_id": reservation_id}
+            reservations_collection.delete_one(query)
+            print(f"Reserva excluída do banco: {reservation_id}")
+        except Exception as e:
+            print(f"Erro ao excluir a reserva do banco: {e}")
+            return e
+
+    

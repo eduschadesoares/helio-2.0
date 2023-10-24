@@ -1,5 +1,6 @@
 from models.helicopter import Helicopter
 from models.date_system import Date_system
+from models.reservation import Reservation
 from database import MONGODB_URI, MONGODB_DATABASE
 from database.database_manager import DatabaseManager
 from utils.helicopter_generator import HelicopterGenerator
