@@ -15,6 +15,11 @@ class DatabaseManager:
         # Crie um índice para o atributo 'cpf' na coleção de pilotos
         pilots_collection = self.db["pilots"]
         pilots_collection.create_index("cpf", unique=True)
+
+        # Crie um índice para o atributo 'cpf' na coleção de pilotos
+        destinations_collection = self.db["destinations"]
+        destinations_collection.create_index("code", unique=True)
+        destinations_collection.create_index("city", unique=True)
         
     def get_collection(self, collection_name):
         return self.db[collection_name]
@@ -94,4 +99,36 @@ class DatabaseManager:
         pilots_collection = self.db["pilots"]
         return pilots_collection.count_documents({})
     
-    # 
+    # Destination
+
+    def save_destination(self, destination_data):
+        try:
+            destinations_collection = self.db["destinations"]
+            destinations_collection.insert_one(destination_data)
+            print(f"Salvo no banco {destination_data}")
+        except DuplicateKeyError as e:
+            print(f"Erro ao salvar destino com código {destination_data.get('code')}: {e}")
+            print(f"Erro ao salvar destino com código {destination_data.get('city')}: {e}")
+            return e
+
+    def get_destination_by_code(self, destination_code):
+        destinations_collection = self.db["destinations"]
+        return destinations_collection.find_one({"code": destination_code})
+
+    def get_all_destinations(self):
+        destinations_collection = self.db["destinations"]
+        return list(destinations_collection.find())
+
+    def delete_destination(self, destination_code):
+        destinations_collection = self.db["destinations"]
+        delete_query = {"code": destination_code}
+        destinations_collection.delete_one(delete_query)
+        print(f"Deleted Destination {destination_code}")
+
+    def destination_exists(self, destination_code):
+        destinations_collection = self.db["destinations"]
+        return destinations_collection.count_documents({"code": destination_code}) > 0
+
+    def count_destinations(self):
+        destinations_collection = self.db["destinations"]
+        return destinations_collection.count_documents({})

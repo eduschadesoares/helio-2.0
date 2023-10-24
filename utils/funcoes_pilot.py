@@ -11,7 +11,7 @@ pilot_generator = PilotGenerator()
 quantity = 400
 random_pilots = pilot_generator.generate_random_pilots(quantity)
 
-
+    
 random_pilots_data = [{"name": pilot.name, "cpf": pilot.cpf, "commission_rate": pilot.commission_rate, "total_flight_hours": pilot.total_flight_hours, "age": pilot.age} for pilot in random_pilots]
 
 for pilot in random_pilots_data:
