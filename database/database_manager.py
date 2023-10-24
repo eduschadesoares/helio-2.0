@@ -2,6 +2,7 @@
 
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
+import datetime
 
 class DatabaseManager:
     def __init__(self, db_uri, db_name):
@@ -132,3 +133,35 @@ class DatabaseManager:
     def count_destinations(self):
         destinations_collection = self.db["destinations"]
         return destinations_collection.count_documents({})
+    
+    # Data System
+
+    def save_date_system(self, current_datetime):
+        date_system_collection = self.db["date_system"]
+
+        # Remove o registro anterior (se houver)
+        date_system_collection.delete_many({})
+
+        # Insere o novo registro
+        date_system_collection.insert_one({"current_datetime": current_datetime})
+
+    def edit_date_system(self, new_datetime):
+        date_system_collection = self.db["date_system"]
+
+        # Obtém o registro atual (se houver)
+        current_date_system = date_system_collection.find_one()
+
+        if current_date_system:
+            # Atualiza a data e hora
+            current_date_system["current_datetime"] = new_datetime
+            date_system_collection.replace_one({"_id": current_date_system["_id"]}, current_date_system)
+
+    def load_date_system(self):
+        date_system_collection = self.db["date_system"]
+        date_system_data = date_system_collection.find_one()
+        return date_system_data["current_datetime"]
+    
+        #if date_system_data:
+        #    return date_system_data["current_datetime"]
+        #else:
+        #    return datetime.now()
