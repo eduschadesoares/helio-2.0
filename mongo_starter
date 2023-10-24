@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Função para iniciar o MongoDB
+start_mongodb() {
+    brew services start mongodb/brew/mongodb-community
+}
+
+# Função para encerrar o MongoDB
+stop_mongodb() {
+    brew services stop mongodb/brew/mongodb-community
+}
+
+# Função para verificar o status do MongoDB
+status_mongodb() {
+    brew services info mongodb/brew/mongodb-community
+}
+
+case "$1" in
+    start)
+        start_mongodb
+        ;;
+    stop)
+        stop_mongodb
+        ;;
+    status)
+        status_mongodb
+        ;;
+    *)
+        echo "Uso: $0 {start|stop|status}"
+        exit 1
+esac
