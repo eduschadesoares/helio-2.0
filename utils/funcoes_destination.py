@@ -17,8 +17,8 @@ random_cities_data = [{"code": city.code, "city": city.city, "distance": city.di
 
 for city in random_cities_data:
     #print(city)
-    db_manager.save_destination(city)
-    #pass
+    #db_manager.save_destination(city)
+    pass
 
 
 # Fechar a conexão com o banco de dados quando terminar

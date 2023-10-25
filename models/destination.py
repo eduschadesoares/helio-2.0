@@ -13,6 +13,14 @@ class Destination:
     def get_status(self):
         return self.is_open
 
+    def to_dict(self):
+        return {
+            "code": self.code,
+            "city": self.city,
+            "distance": self.distance,
+            "is_open": self.is_open
+        }
+
     def __str__(self):
         status = "Aberto" if self.is_open else "Fechado"
         return f"Código: {self.code}, Cidade: {self.city}, Distância: {self.distance} km, Status do Heliporto: {status}"

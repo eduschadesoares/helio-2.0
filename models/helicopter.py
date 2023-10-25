@@ -1,6 +1,7 @@
 class Helicopter:
-    def __init__(self, serial, flight_hours, age):
+    def __init__(self, serial, current_city, flight_hours, age):
         self.serial = serial
+        self.current_city = current_city
         self.flight_hours = flight_hours
         self.age = age
 
@@ -18,6 +19,14 @@ class Helicopter:
         # Executa a manutenção do helicóptero e redefine as horas de voo
         # Implemente a lógica de manutenção aqui
         pass
+
+    def to_dict(self):
+        return {
+            "serial": self.serial,
+            "current_city": self.current_city,  # Inclua o atributo "current_city" no dicionário
+            "flight_hours": self.flight_hours,
+            "age": self.age,
+        }
 
     def __str__(self):
         return f"Modelo: {self.serial}, Horas de Voo: {self.flight_hours}, Idade: {self.age}"
