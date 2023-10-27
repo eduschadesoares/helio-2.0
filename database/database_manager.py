@@ -82,6 +82,25 @@ class DatabaseManager:
         except DuplicateKeyError as e:
             print(f"Erro ao salvar piloto com cpf {pilot_data.get('cpf')}: {e}")
             return e
+    
+    def update_pilot(self, pilot_id, new_data):
+        """
+        Edita um piloto com base no _id fornecido pelo MongoDB.
+        :param pilot_id: _id do piloto a ser editado.
+        :param new_data: Dicionário com os novos dados do piloto.
+        """
+        pilots_collection = self.db["pilots"]
+        query = {"_id": pilot_id}
+        update = {"$set": new_data}
+
+        result = pilots_collection.update_one(query, update)
+
+        if result.modified_count == 1:
+            print("deu boa")
+            return True  # Sucesso na edição
+        else:
+            print("deu ruim")
+            return False  # Piloto com o _id especificado não encontrado
 
     def get_pilot_by_cpf(self, pilot_cpf):
         pilots_collection = self.db["pilots"]
@@ -91,11 +110,11 @@ class DatabaseManager:
         pilots_collection = self.db["pilots"]
         return list(pilots_collection.find())
 
-    def delete_pilot(self, pilot_cpf):
+    def delete_pilot(self, pilot_id):
         pilots_collection = self.db["pilots"]
-        delete_query = {"cpf": pilot_cpf}
+        delete_query = {"_id": pilot_id}
         pilots_collection.delete_one(delete_query)
-        print(f"Deleted Pilot {pilot_cpf}")
+        print(f"Deleted Pilot {pilot_id}")
 
     def pilot_exists(self, pilot_cpf):
         pilots_collection = self.db["pilots"]
@@ -120,6 +139,11 @@ class DatabaseManager:
     def get_destination_by_code(self, destination_code):
         destinations_collection = self.db["destinations"]
         return destinations_collection.find_one({"code": destination_code})
+    
+    def return_destination_city(self, destination_code):
+        destinations_collection = self.db["destinations"]
+        dest_name = destinations_collection.find_one({"code": destination_code})
+        return dest_name.get('city')
 
     def get_all_destinations(self):
         destinations_collection = self.db["destinations"]
@@ -202,4 +226,7 @@ class DatabaseManager:
             print(f"Erro ao excluir a reserva do banco: {e}")
             return e
 
+    def get_all_generic(self, type):
+        pilots_collection = self.db[type]
+        return list(pilots_collection.find())
     

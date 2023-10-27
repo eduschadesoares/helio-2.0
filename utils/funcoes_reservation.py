@@ -1,4 +1,5 @@
-
+import sys
+sys.path.append('../')
 from models.helicopter import Helicopter
 from models.date_system import Date_system
 from models.reservation import Reservation
@@ -21,7 +22,7 @@ date = "2023-10-26"
 time = "08:30"
 
 # Crie uma instância de Reservation com os detalhes da reserva
-destination = "488659"
+destination = "631822"
 reservation = Reservation(destination, date, time, "DHVX421")
 
 if reservation.is_valid(date_system):
@@ -34,7 +35,7 @@ if reservation.is_valid(date_system):
         "helicopter_serial": reservation.helicopter_serial
     }
 
-    #db_manager.save_reservation(reservation_data)
+    db_manager.save_reservation(reservation_data)
 
 # Edição de reserva
 #edited_data = {"destination": "111111", "date": "2023-11-01", "time": "10:00", "helicopter_serial": "New Serial"}
