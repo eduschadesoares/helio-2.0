@@ -11,21 +11,34 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 pilot_id = None
 class App(customtkinter.CTk):
 
+    # Starting object
     def __init__(self, db):
+        # Start CT
         super().__init__()
+        # Recieve DB
         self.db = db
 
         # Define window
         self.geometry("1100x580")
         self.title("Helio System")
 
+        # Create sidebar frame
+        self.create_sidebar_frame()
+        # Create tab view
+        self.create_tab_view()
+        # Create automatically all tables
+        self.create_all_tables()
+        # Define all binds on GUI
+        self.define_all_binds()
+
+    def create_sidebar_frame(self):
         # create sidebar frame with widgets
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="CustomTkinter", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text= "Update Tables", command=self.update_all_table)
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text= "Refresh Tables", command=self.update_all_table)
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
@@ -47,6 +60,7 @@ class App(customtkinter.CTk):
         self.label_top = customtkinter.CTkLabel(self, text= "APARECE AQUI", width=800, height=20)
         self.label_top.grid(row=1, column=2, padx=(20, 0), pady=(5, 0))
 
+    def create_tab_view(self):
         # create tabview
         self.tabview = customtkinter.CTkTabview(self, width=800)
         self.tabview.grid(row=2, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
@@ -57,10 +71,13 @@ class App(customtkinter.CTk):
         self.tabview.tab("Pilots").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
         self.tabview.tab("Helicopters").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Destinations").grid_columnconfigure(0, weight=1)
-        self.tabview.tab("Reservations").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Reservations").grid_columnconfigure(0, weight=1)   
 
-        # Create automatically all tables
-        self.create_all_tables()
+    def define_all_binds(self):
+        #self.pilots_table.bind('<<TreeviewSelect>>', self.pilots_item_select)
+
+        # Bind section waiting for Double Clicks on Pilots Table
+        self.pilots_table.bind('<Double-1>', self.pilots_open_edit)
 
     def create_all_tables(self):
         self.create_pilots_table()
@@ -82,11 +99,6 @@ class App(customtkinter.CTk):
             self.pilots_table.column(i,minwidth=100, width=150)
 
         self.pilots_table.grid(row=0, column=0, padx=20, pady=(0, 0))
-
-        #self.pilots_table.bind('<<TreeviewSelect>>', self.pilots_item_select)
-        self.pilots_table.bind('<Double-1>', self.pilots_open_edit)
-
-        
 
     def update_pilots_table(self):
         self.pilots_table.delete(*self.pilots_table.get_children())
@@ -205,7 +217,7 @@ class App(customtkinter.CTk):
         self.pop_up = Toplevel(self)
         self.pop_up.title("Edit Pilot")
         self.pop_up.grab_set()
-        self.pop_up.geometry("600x400")
+        self.pop_up.geometry("600x300")
             
         self.pop_up.label_nome_pilot = customtkinter.CTkLabel(self.pop_up, text="Name",width=200, height=20)
         self.pop_up.label_cpf_pilot = customtkinter.CTkLabel(self.pop_up, text="CPF",width=200, height=20)
@@ -257,7 +269,6 @@ class App(customtkinter.CTk):
             self.update_pilots_table()
         else:
             print("Click 'Yes' to exit!")
-
 
     def save_changes(self, event):
         

@@ -9,10 +9,12 @@ from utils.pilot_generator import PilotGenerator
 from utils.city_generator import CityGenerator
 from view.main_interface import App
 from controllers.main_controller import Main_controller
-import random
 
 # Criar uma instância do DatabaseManager usando as informações de configuração do __init__.py
 db_manager = DatabaseManager(MONGODB_URI, MONGODB_DATABASE)
+
+if db_manager:
+    print("Database successfully connect!")
 
 # Inicia a interface
 main_interface = App(db_manager)
