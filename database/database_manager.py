@@ -1,13 +1,18 @@
 # database/database_manager.py
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 from pymongo.errors import DuplicateKeyError
 import datetime
 
 class DatabaseManager:
     def __init__(self, db_uri, db_name):
-        self.client = MongoClient(db_uri)
-        self.db = self.client[db_name]
+        try:
+            self.client = MongoClient(db_uri, serverSelectionTimeoutMS=3000)
+            self.db = self.client[db_name]
+        except ConnectionFailure as e:
+            print(f"Erro ao conectar ao banco de dados: {e}")
+            raise e
         
         # Crie um índice para o atributo 'serial' na coleção de helicópteros
         helicopters_collection = self.db["helicopters"]
