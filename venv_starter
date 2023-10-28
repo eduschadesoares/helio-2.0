@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source ../bin/activate
+echo "Virtual Environment Activated"
+pip3 --version
